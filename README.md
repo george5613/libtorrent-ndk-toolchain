@@ -17,5 +17,9 @@ After downing source and building the target will find in
 ## Thanks for
 
 * [arvidn/libtorrent](https://github.com/arvidn/libtorrent)
-
 * [frostwire/frostwire-jlibtorrent](https://github.com/frostwire/frostwire-jlibtorrent)
+
+### TODO
+
+* Add support for `arm-64` `x86` ` x86-64`
+
