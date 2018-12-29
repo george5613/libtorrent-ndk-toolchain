@@ -1,5 +1,5 @@
 # libtorrent-ndk-toolchain
-shell script for build libtorrent with android NDK
+A Shell script for build [libtorrent](https://github.com/arvidn/libtorrent) with Android NDK
 
 ## How to build
 
@@ -22,4 +22,3 @@ After downing source and building the target will find in
 ### TODO
 
 * Add support for `arm-64` `x86` ` x86-64`
-
