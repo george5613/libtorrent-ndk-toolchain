@@ -32,6 +32,7 @@ function init_libtorrent(){
     fi
 
     echo "Extracting..."
+    export LIBTORRENT_DIR=$dir_name
     if [ ! -d "$dir_name" ]; then
         # rm -rf $dir_name
         tar xf $archive
@@ -40,5 +41,5 @@ function init_libtorrent(){
     else
         echo "Archive $archive already unpacked into $dir_name"
     fi
-    export LIBTORRENT_DIR=$dir_name
+    
 }

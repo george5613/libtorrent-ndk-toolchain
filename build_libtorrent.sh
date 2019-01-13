@@ -1,11 +1,31 @@
 #!/bin/bash
 set -eu
 
+DEST_ARCH=$1
+echo "DEST_ARCH=$DEST_ARCH"
+if [ -z "$DEST_ARCH" ]; then
+    echo "You must specific an architecture 'armv7a, x86, ...'."
+    echo ""
+    exit 1
+fi
+
 ROOT_DIR=$PWD
-ARCH_TYPE="arm"
-TORRENT_ARCHS_32="armv7a x86"
-TORRENT_ARCHS_64="armv7a arm64 x86 x86_64"
-ANDROID_NDK=/Users/lingjie/Library/Android/android-ndk-r16b
+ARCHS_32="armv7a x86"
+ARCHS_64="armv7a arm64 x86 x86_64"
+
+ARCH_TYPE=
+RANLIB_NAME=
+HOST_NAME=
+
+if [[ "$DEST_ARCH" = "armv7a" ]]; then
+    ARCH_TYPE="arm"
+    RANLIB_NAME="arm-linux-androideabi-ranlib"  
+    HOST_NAME="arm-linux-androideabi"
+elif [[ "$DEST_ARCH" = "x86" ]]; then
+    ARCH_TYPE="x86"  
+    RANLIB_NAME="i686-linux-android-gcc-ranlib"
+    HOST_NAME="i686-linux-android-gcc"
+fi
 
 BOOST_VERSION=1.69.0
 LIBTORRENT_VERSION=1.1.11
@@ -23,7 +43,7 @@ if [ -z "$ANDROID_NDK" -o -z "$ANDROID_NDK" ]; then
     exit 1
 fi
 
-TOOLCHAIN=$PWD/toolchain
+TOOLCHAIN=$PWD/toolchain-$ARCH_TYPE
 export ANDROID_TOOLCHAIN=$TOOLCHAIN
 BOOST_PREFIX=${TOOLCHAIN}/build
 
@@ -32,6 +52,7 @@ if [ ! -d "$TOOLCHAIN" ]; then
   $ANDROID_NDK/build/tools/make-standalone-toolchain.sh \
       --platform=android-15 \
       --install-dir="$TOOLCHAIN" \
+      --arch="$ARCH_TYPE" \
       --use-llvm \
       --stl=libc++
 else
@@ -57,8 +78,8 @@ echo "Building..."
     --with-filesystem \
     --with-random \
     --with-system \
-    toolset=clang-android \
-    architecture=arm \
+    toolset=clang-$ARCH_TYPE \
+    architecture=$ARCH_TYPE \
     variant=release \
     target-os=android \
     threading=multi \
@@ -66,15 +87,15 @@ echo "Building..."
     link=static \
     runtime-link=static \
 
+cd ..
 echo "Running ranlib on libraries..."
-libs=$(find "bin.v2/libs/" -name '*.a')
+libs=$(find "$TOOLCHAIN/build/lib/" -name '*.a')
 for lib in $libs; do
-  "$TOOLCHAIN/bin/arm-linux-androideabi-ranlib" "$lib"
+  "$TOOLCHAIN/bin/$RANLIB_NAME" "$lib"
 done
 
 echo "Build boost_$BOOST_VERSION success"
 
-cd ..
 cd $LIBTORRENT_DIR
 
 echo "Building libtorrent_$LIBTORRENT_VERSION"
@@ -90,10 +111,10 @@ TORRENT_PREFIX=${TOOLCHAIN}/build
             --prefix=$TORRENT_PREFIX \
             --with-boost=$BOOST_PREFIX \
             --with-boost-libdir=$BOOST_PREFIX/lib \
-			--enable-examples=no \
-			--disable-encryption \
-			--enable-tests=no \
-		    --enable-shared=no \
+			      --enable-examples=no \
+			      --disable-encryption \
+			      --enable-tests=no \
+		        --enable-shared=no \
             --enable-static=yes \
             --enable-debug=no \
             --enable-loggin-yes

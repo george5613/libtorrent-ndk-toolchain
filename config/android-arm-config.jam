@@ -2,9 +2,7 @@ import os ;
 
 ANDROID_TOOLCHAIN = [ os.environ ANDROID_TOOLCHAIN ] ;
 
-using clang : android : $(ANDROID_TOOLCHAIN)/bin/clang++ :
-    <archiver>$(ANDROID_TOOLCHAIN)/bin/arm-linux-androideabi-ar
-    <ranlib>$(ANDROID_TOOLCHAIN)/bin/arm-linux-androideabi-ranlib
+using clang : arm : $(ANDROID_TOOLCHAIN)/bin/arm-linux-androideabi-clang++ :
     <cxxflags>-fPIC
     <cxxflags>-march=armv7-a
     <cxxflags>-mfpu=neon
