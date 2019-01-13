@@ -1,20 +1,26 @@
---- file.cpp.src	2018-12-29 15:33:14.000000000 +0800
-+++ file.cpp	2018-12-29 15:33:23.000000000 +0800
-@@ -1573,13 +1573,13 @@ namespace libtorrent
+--- file.cpp.orginal.cpp	2019-01-13 20:33:36.000000000 +0800
++++ file.cpp	2019-01-13 20:30:33.000000000 +0800
+@@ -641,16 +641,16 @@ static_assert(!(open_mode::sparse & open
  		}
  #endif
  
 -#ifdef POSIX_FADV_RANDOM
--		if (mode & random_access)
+-		if ((mode & open_mode::random_access))
 -		{
 -			// disable read-ahead
+-			// NOTE: in android this function was introduced in API 21,
+-			// but the constant POSIX_FADV_RANDOM is there for lower
+-			// API levels, just don't add :: to allow a macro workaround
 -			posix_fadvise(native_handle(), 0, 0, POSIX_FADV_RANDOM);
 -		}
 -#endif
 +// #ifdef POSIX_FADV_RANDOM
-+// 		if (mode & random_access)
++// 		if ((mode & open_mode::random_access))
 +// 		{
 +// 			// disable read-ahead
++// 			// NOTE: in android this function was introduced in API 21,
++// 			// but the constant POSIX_FADV_RANDOM is there for lower
++// 			// API levels, just don't add :: to allow a macro workaround
 +// 			posix_fadvise(native_handle(), 0, 0, POSIX_FADV_RANDOM);
 +// 		}
 +// #endif

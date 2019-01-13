@@ -28,8 +28,8 @@ elif [[ "$DEST_ARCH" = "x86" ]]; then
 fi
 
 BOOST_VERSION=1.69.0
-LIBTORRENT_VERSION=1.1.11
-LIBTORRENT_BRANCH=libtorrent_1_1_11
+LIBTORRENT_VERSION=1.2.0
+LIBTORRENT_BRANCH=libtorrent_1_2_0
 echo "start building libtorent_$LIBTORRENT_VERSION with boost_$BOOST_VERSION"
 
 source lib_archive.sh
